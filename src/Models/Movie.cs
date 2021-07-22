@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace AlkemyChallenge.Models
 {
-    public class Movie
+    public class Movie : IModel
     {
-        public int Id { get; set; }
+        public int Id { get; }
         public string Title { get; set; }
         public string Image { get; set; }
         public int Rating { get; set; }
