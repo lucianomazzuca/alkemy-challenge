@@ -16,9 +16,9 @@ namespace AlkemyChallenge.Repositories
             _model = context.Set<TModel>();
         }
 
-        public virtual Task<IEnumerable<TModel>> GetAll()
+        public async virtual Task<IEnumerable<TModel>> GetAll()
         {
-            throw new System.NotImplementedException();
+            return await _model.ToListAsync();
         }
 
         public virtual async Task<TModel> GetById(int id)

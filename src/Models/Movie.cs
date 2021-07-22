@@ -7,7 +7,7 @@ namespace AlkemyChallenge.Models
 {
     public class Movie : IModel
     {
-        public int Id { get; }
+        public int Id { get; set; }
         public string Title { get; set; }
         public string Image { get; set; }
         public int Rating { get; set; }
