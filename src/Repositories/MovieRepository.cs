@@ -1,4 +1,5 @@
 ﻿using AlkemyChallenge.Data;
+using AlkemyChallenge.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,13 +7,10 @@ using System.Threading.Tasks;
 
 namespace AlkemyChallenge.Repositories
 {
-    public class MovieRepository
+    public class MovieRepository : BaseRepository<Movie>
     {
-        private readonly AppDbContext _context;
-
-        public MovieRepository(AppDbContext context)
+        public MovieRepository(AppDbContext context) : base(context)
         {
-            _context = context;
         }
     }
 }

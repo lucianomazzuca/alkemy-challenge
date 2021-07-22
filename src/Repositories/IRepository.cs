@@ -7,11 +7,12 @@ using System.Threading.Tasks;
 
 namespace AlkemyChallenge.Repositories
 {
-    interface IRepository<T> where T : IModel
+    interface IRepository<TModel> where TModel : class
     {
-        Task<T> GetAll();
-        Task<T> GetById();
-        Task<T> Add();
-        Task<T> Delete();
+        Task<IEnumerable<TModel>> GetAll();
+        Task<TModel> GetById(int id);
+        Task Add();
+        Task Delete();
+        Task Update();
     }
 }
