@@ -53,15 +53,13 @@ namespace AlkemyChallenge.Repositories
 
         public async Task Update(Movie movie, int[] characterIds = null, int[] genresIds = null)
         {
-            var newMovie = movie;
-
             if (characterIds != null)
             {
                 foreach (int characterId in characterIds)
                 {
-                    newMovie.Characters.Clear();
+                    movie.Characters.Clear();
                     Character character = await _context.Characters.FindAsync(characterId);
-                    newMovie.Characters.Add(character);
+                    movie.Characters.Add(character);
                 }
             }
 
@@ -69,9 +67,9 @@ namespace AlkemyChallenge.Repositories
             {
                 foreach (int genreId in genresIds)
                 {
-                    newMovie.Genres.Clear();
+                    movie.Genres.Clear();
                     Genre genre = await _context.Genres.FindAsync(genreId);
-                    newMovie.Genres.Add(genre);
+                    movie.Genres.Add(genre);
                 }
             }
 

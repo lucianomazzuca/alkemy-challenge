@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -13,6 +14,6 @@ namespace AlkemyChallenge.Models
         public int Age { get; set; }
         public int Weight { get; set; }
         public string Story { get; set; }
-        public ICollection<Movie> Movies { get; set; }
+        public ICollection<Movie> Movies { get; set; } = new Collection<Movie>();
     }
 }
