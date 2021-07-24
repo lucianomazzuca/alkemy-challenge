@@ -11,8 +11,8 @@ namespace AlkemyChallenge.Repositories
     {
         Task<IEnumerable<TModel>> GetAll();
         Task<TModel> GetById(int id);
-        Task Add();
-        Task Delete();
-        Task Update();
+        Task Add(TModel item);
+        Task Delete(int id);
+        Task Update(TModel item);
     }
 }

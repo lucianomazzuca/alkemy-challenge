@@ -1,4 +1,5 @@
 ﻿using AlkemyChallenge.Data;
+using AlkemyChallenge.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -7,8 +8,8 @@ namespace AlkemyChallenge.Repositories
 {
     public abstract class BaseRepository<TModel> : IRepository<TModel> where TModel : class
     {
-        private readonly AppDbContext _context;
-        private DbSet<TModel> _model;
+        protected readonly AppDbContext _context;
+        protected readonly DbSet<TModel> _model;
 
         public BaseRepository(AppDbContext context)
         {
@@ -26,19 +27,29 @@ namespace AlkemyChallenge.Repositories
             return await _model.FindAsync(id);
         }
 
-        public virtual Task Add()
+        public virtual async Task Add(TModel item)
         {
-            throw new System.NotImplementedException();
+            await _model.AddAsync(item);
+
+            _context.SaveChanges();
         }
 
-        public virtual Task Delete()
+        public virtual async Task Delete(int id)
         {
-            throw new System.NotImplementedException();
+            var item = await _model.FindAsync(id);
+            if (item == null)
+            {
+                throw new RecordNotFoundException();
+            };
+
+            _model.Remove(item);
+            await _context.SaveChangesAsync();
         }
 
-        public virtual Task Update()
+        public virtual async Task Update(TModel item)
         {
-            throw new System.NotImplementedException();
+            _context.Entry(item).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
         }
     }
 }
