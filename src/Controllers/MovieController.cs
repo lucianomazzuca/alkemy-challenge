@@ -9,6 +9,7 @@ using AlkemyChallenge.Data;
 using AlkemyChallenge.Models;
 using AlkemyChallenge.Repositories;
 using AlkemyChallenge.Services;
+using AlkemyChallenge.Exceptions;
 
 namespace AlkemyChallenge.Controllers
 {
@@ -17,13 +18,11 @@ namespace AlkemyChallenge.Controllers
     public class MovieController : ControllerBase
     {
         private readonly MovieRepository _movieRepository;
-        private readonly AppDbContext _context;
         private readonly FileService _fileService;
         public MovieController(MovieRepository movieRepository, FileService fileService,AppDbContext context)
         {
             _movieRepository = movieRepository;
             _fileService = fileService;
-            _context = context;
         }
 
         // GET: api/Movie
@@ -53,62 +52,44 @@ namespace AlkemyChallenge.Controllers
         public async Task<ActionResult> PostMovie([FromForm] Movie movie, [FromForm] IFormFile image)
         {
             movie.CreatedAt = DateTimeOffset.Now;
-            movie.Image = await _fileService.SaveImage(image);
-            //await _movieRepository.Add(movie);
+
+            if (image != null)
+            {
+                movie.Image = await _fileService.SaveImage(image);
+            }
+            await _movieRepository.Add(movie);
 
             return CreatedAtAction("GetMovie", new { id = movie.Id }, movie);
         }
 
         //// PUT: api/Movie/5
-        //[HttpPut("{id}")]
-        //public async Task<IActionResult> PutMovie(int id, Movie movie)
-        //{
-        //    if (id != movie.Id)
-        //    {
-        //        return BadRequest();
-        //    }
+        [HttpPut("{id}")]
+        public async Task<ActionResult> PutMovie (int id, [FromForm] Movie movie, [FromForm] IFormFile image)
+        {
+            if (image != null)
+            {
+                movie.Image = await _fileService.SaveImage(image);
+            }
 
-        //    _context.Entry(movie).State = EntityState.Modified;
-
-        //    try
-        //    {
-        //        await _context.SaveChangesAsync();
-        //    }
-        //    catch (DbUpdateConcurrencyException)
-        //    {
-        //        if (!MovieExists(id))
-        //        {
-        //            return NotFound();
-        //        }
-        //        else
-        //        {
-        //            throw;
-        //        }
-        //    }
-
-        //    return NoContent();
-        //}
-
+            movie.Id = id;
+            await _movieRepository.Update(movie);
+            return NoContent();
+        }
 
         //// DELETE: api/Movie/5
-        //[HttpDelete("{id}")]
-        //public async Task<IActionResult> DeleteMovie(int id)
-        //{
-        //    var movie = await _context.Movies.FindAsync(id);
-        //    if (movie == null)
-        //    {
-        //        return NotFound();
-        //    }
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteMovie(int id)
+        {
+            try
+            {
+                await _movieRepository.Delete(id);
 
-        //    _context.Movies.Remove(movie);
-        //    await _context.SaveChangesAsync();
+            } catch(RecordNotFoundException)
+            {
+                return NotFound();
+            }
 
-        //    return NoContent();
-        //}
-
-        //private bool MovieExists(int id)
-        //{
-        //    return _context.Movies.Any(e => e.Id == id);
-        //}
+            return Ok();
+        }
     }
 }

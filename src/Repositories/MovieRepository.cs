@@ -14,11 +14,6 @@ namespace AlkemyChallenge.Repositories
         {
         }
 
-        //public override async Task<IEnumerable<Movie>> GetAll()
-        //{
-        //    return await _context.Movies.ToListAsync();
-        //}
-
         public override async Task<Movie> GetById(int id)
         {
             var movie = await _context.Movies
@@ -79,6 +74,7 @@ namespace AlkemyChallenge.Repositories
             }
 
             _context.Entry(movie).State = EntityState.Modified;
+            //_context.Movies.Update(movie);
             await _context.SaveChangesAsync();
         }
 

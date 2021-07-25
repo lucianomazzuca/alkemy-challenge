@@ -35,6 +35,7 @@ namespace AlkemyChallenge
                 options.UseSqlServer(Configuration.GetConnectionString("AlkemyChallenge")));
 
             services.AddScoped<MovieRepository>();
+            services.AddScoped<CharacterRepository>();
             services.AddScoped<FileService>();
 
             services.AddControllers();
