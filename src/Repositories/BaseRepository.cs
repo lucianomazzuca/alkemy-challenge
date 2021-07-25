@@ -17,7 +17,7 @@ namespace AlkemyChallenge.Repositories
             _model = context.Set<TModel>();
         }
 
-        public async virtual Task<IEnumerable<TModel>> GetAll()
+        public virtual async Task<IEnumerable<TModel>> GetAll()
         {
             return await _model.ToListAsync();
         }

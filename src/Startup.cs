@@ -1,4 +1,7 @@
 using AlkemyChallenge.Data;
+using AlkemyChallenge.Models;
+using AlkemyChallenge.Repositories;
+using AlkemyChallenge.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -30,6 +33,10 @@ namespace AlkemyChallenge
         {
             services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("AlkemyChallenge")));
+
+            services.AddScoped<MovieRepository>();
+            services.AddScoped<FileService>();
+
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {

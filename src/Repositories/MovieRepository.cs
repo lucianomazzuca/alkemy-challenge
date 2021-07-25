@@ -14,6 +14,11 @@ namespace AlkemyChallenge.Repositories
         {
         }
 
+        //public override async Task<IEnumerable<Movie>> GetAll()
+        //{
+        //    return await _context.Movies.ToListAsync();
+        //}
+
         public override async Task<Movie> GetById(int id)
         {
             var movie = await _context.Movies

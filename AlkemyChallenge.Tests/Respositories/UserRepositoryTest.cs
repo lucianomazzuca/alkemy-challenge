@@ -37,7 +37,9 @@ namespace AlkemyChallenge.Tests.Respositories
                 context.Database.EnsureDeleted();
                 context.Database.EnsureCreated();
 
-                context.User.Add(user1);
+                context.Users.Add(user1);
+                context.Users.Add(user2);
+                context.Users.Add(user3);
 
                 context.SaveChanges();
             }
