@@ -32,9 +32,9 @@ namespace AlkemyChallenge.Controllers
 
         // GET: api/Character
         [HttpGet]
-        public ActionResult<IEnumerable<CharacterReadDto>> GetCharacters([FromQuery] string name, [FromQuery] int? age = null, [FromQuery] int? movie = null)
+        public ActionResult<IEnumerable<CharacterReadDto>> GetCharacters([FromQuery] string name, [FromQuery] int? age = null, [FromQuery] int? movie = null, [FromQuery] int? weight = null)
         {
-            var characters = _characterRepository.GetAllWith(name, age, movie);
+            var characters = _characterRepository.GetAllWith(name, age, movie, weight);
             var charactersDto = _mapper.Map<IEnumerable<CharacterReadDto>>(characters);
             return Ok(charactersDto);
         }

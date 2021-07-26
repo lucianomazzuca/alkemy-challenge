@@ -14,7 +14,7 @@ namespace AlkemyChallenge.Repositories
         {
         }
 
-        public IEnumerable<Character> GetAllWith(string name, int? age = null, int? movieId = null)
+        public IEnumerable<Character> GetAllWith(string name, int? age = null, int? movieId = null, int? weight = null)
         {
             IQueryable<Character> characters = _context.Characters;
 
@@ -44,6 +44,11 @@ namespace AlkemyChallenge.Repositories
                 //        Weight = c.Weight,
                 //        Movies = (ICollection<Movie>)c.Movies.Where(m => m.Id == movieId)
                 //    });
+            }
+
+            if (weight != null)
+            {
+                characters = characters.Where(c => c.Weight== weight);
             }
 
             return characters;
