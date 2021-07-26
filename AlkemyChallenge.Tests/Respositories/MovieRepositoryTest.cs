@@ -72,16 +72,16 @@ namespace AlkemyChallenge.Tests.Respositories
         }
 
         [Fact]
-        public async void Add_NewMovie_WithCharacter()
+        public async void Add_testChar()
         {
             using (var context = new AppDbContext(ContextOptions))
             {
                 var repository = new MovieRepository(context);
                 var movie1 = new Movie() { Id = 4, Title = "Interstellar", Image = "image.jpg", CreatedAt = DateTime.Parse("2013-04-28"), Rating = 5 };
+                var character1 = new Character() { Id = 1, Name = "Cooper", Age = 32, Image = "image.jpg", Story = "lorem ipsum", Weight = 80 };
+                movie1.Characters.Add(character1);
 
-                var characterIds = new[] { 1 };
-
-                await repository.Add(movie1, characterIds);
+                await repository.Add(movie1);
                 var movies = context.Movies
                     .Include(movies => movies.Characters)
                     .ToList();
@@ -93,7 +93,28 @@ namespace AlkemyChallenge.Tests.Respositories
         }
 
         [Fact]
-        public async void Add_NewMovie_Genre()
+        public async void AddWith_NewMovie_WithCharacter()
+        {
+            using (var context = new AppDbContext(ContextOptions))
+            {
+                var repository = new MovieRepository(context);
+                var movie1 = new Movie() { Id = 4, Title = "Interstellar", Image = "image.jpg", CreatedAt = DateTime.Parse("2013-04-28"), Rating = 5 };
+
+                var characterIds = new[] { 1 };
+
+                await repository.AddWith(movie1, characterIds);
+                var movies = context.Movies
+                    .Include(movies => movies.Characters)
+                    .ToList();
+
+                Assert.Equal(4, movies.Count);
+                Assert.Equal(4, movies[3].Id);
+                Assert.Equal(1, movies[3].Characters.Count);
+            }
+        }
+
+        [Fact]
+        public async void AddWith_NewMovie_Genre()
         {
             using (var context = new AppDbContext(ContextOptions))
             {
@@ -101,7 +122,7 @@ namespace AlkemyChallenge.Tests.Respositories
                 var movie1 = new Movie() { Id = 4, Title = "Interstellar", Image = "image.jpg", CreatedAt = DateTime.Parse("2013-04-28"), Rating = 5 };
                 var genresIds = new[] { 1 };
 
-                await repository.Add(movie1, null, genresIds);
+                await repository.AddWith(movie1, null, genresIds);
                 var movies = context.Movies
                     .Include(movies => movies.Genres)
                     .ToList();
@@ -113,13 +134,13 @@ namespace AlkemyChallenge.Tests.Respositories
         }
 
         [Fact]
-        public async void Edit_ExistingMovie()
+        public async void Update_ExistingMovie()
         {
             using (var context = new AppDbContext(ContextOptions))
             {
                 var repository = new MovieRepository(context);
                 var movie1 = new Movie() { Id = 4, Title = "Interstellar", Image = "image.jpg", CreatedAt = DateTime.Parse("2013-04-28"), Rating = 5 };
-                await repository.Add(movie1, null, null);
+                await repository.Add(movie1);
 
                 movie1.Title = "Batman";
                 await repository.Update(movie1);
@@ -133,17 +154,20 @@ namespace AlkemyChallenge.Tests.Respositories
         }
 
         [Fact]
-        public async void Edit_CharactersFromMovie()
+        public async void Update_WithCharacter()
         {
             using (var context = new AppDbContext(ContextOptions))
             {
                 var repository = new MovieRepository(context);
                 var movie1 = new Movie() { Id = 4, Title = "Interstellar", Image = "image.jpg", CreatedAt = DateTime.Parse("2013-04-28"), Rating = 5 };
-                var characterIds = new[] { 1 };
-                await repository.Add(movie1, characterIds, null);
-                var newCharacterIds = new[] { 2 };
+                var character1 = new Character() { Id = 1, Name = "Cooper", Age = 32, Image = "image.jpg", Story = "lorem ipsum", Weight = 80 };
+                var character2 = new Character() { Id = 2, Name = "Test", Age = 32, Image = "image.jpg", Story = "lorem ipsum", Weight = 80 };
+                movie1.Characters.Add(character1);
+                await repository.Add(movie1);
+                movie1.Characters.Remove(character1);
+                movie1.Characters.Add(character2);
 
-                await repository.Update(movie1, newCharacterIds);
+                await repository.Update(movie1);
                 var movies = context.Movies
                     .Include(movies => movies.Genres)
                     .ToList();
@@ -151,7 +175,48 @@ namespace AlkemyChallenge.Tests.Respositories
 
                 Assert.Equal(2, charactersRelated[0].Id);
             }
+        }
 
+        [Fact]
+        public async void Update_CharactersFromMovie()
+        {
+            using (var context = new AppDbContext(ContextOptions))
+            {
+                var repository = new MovieRepository(context);
+                var movie1 = new Movie() { Id = 4, Title = "Interstellar", Image = "image.jpg", CreatedAt = DateTime.Parse("2013-04-28"), Rating = 5 };
+                var characterIds = new[] { 1 };
+                await repository.AddWith(movie1, characterIds, null);
+                var newCharacterIds = new[] { 2 };
+
+                await repository.UpdateWith(movie1, newCharacterIds);
+                var movies = context.Movies
+                    .Include(movies => movies.Genres)
+                    .ToList();
+                var charactersRelated = movies[3].Characters.ToList<Character>();
+
+                Assert.Equal(2, charactersRelated[0].Id);
+            }
+        }
+
+        [Fact]
+        public async void UpdateWith_CharactersFromMovie()
+        {
+            using (var context = new AppDbContext(ContextOptions))
+            {
+                var repository = new MovieRepository(context);
+                var movie1 = new Movie() { Id = 4, Title = "Interstellar", Image = "image.jpg", CreatedAt = DateTime.Parse("2013-04-28"), Rating = 5 };
+                var characterIds = new[] { 1 };
+                await repository.AddWith(movie1, characterIds, null);
+                var newCharacterIds = new[] { 2 };
+
+                await repository.UpdateWith(movie1, newCharacterIds);
+                var movies = context.Movies
+                    .Include(movies => movies.Genres)
+                    .ToList();
+                var charactersRelated = movies[3].Characters.ToList<Character>();
+
+                Assert.Equal(2, charactersRelated[0].Id);
+            }
         }
 
         [Fact]
@@ -163,7 +228,7 @@ namespace AlkemyChallenge.Tests.Respositories
                 var movie1 = new Movie() { Id = 4, Title = "Interstellar", Image = "image.jpg", CreatedAt = DateTime.Parse("2013-04-28"), Rating = 5 };
                 var genresIds = new[] { 1 };
                 var charactersIds = new[] { 1 };
-                await repository.Add(movie1, charactersIds, genresIds);
+                await repository.AddWith(movie1, charactersIds, genresIds);
 
                 var movie = await repository.GetById(4);
 

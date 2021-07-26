@@ -24,7 +24,66 @@ namespace AlkemyChallenge.Repositories
             return movie;
         }
 
-        public async Task Add(Movie movie, int[] characterIds = null, int[] genresIds = null)
+        public override async Task Add(Movie movie)
+        {
+            var newMovie = movie;
+
+            if (movie.Characters != null)
+            {
+                foreach (var character in movie.Characters)
+                {
+                    _context.Characters.Attach(character);
+                }
+            }
+
+            if (movie.Genres != null)
+            {
+                foreach (var genre in movie.Genres)
+                {
+                    _context.Genres.Attach(genre);
+                }
+            }
+
+            _context.Movies.Add(newMovie);
+
+            await _context.SaveChangesAsync();
+        }
+
+        public override async Task Update(Movie movie)
+        {
+            if (movie.Characters != null)
+            {
+                var characters = movie.Characters;
+
+                // Delete all related chars
+                //movie.Characters.Clear();
+
+                movie.Characters = characters;
+
+                foreach (var character in movie.Characters)
+                {
+                    _context.Characters.Attach(character);
+                }
+            }
+
+            if (movie.Genres != null)
+            {
+                var genres = movie.Genres;
+
+                // Delete all related genres
+                //movie.Genres.Clear();
+
+                foreach (var genre in movie.Genres)
+                {
+                    _context.Genres.Attach(genre);
+                }
+            }
+
+            _context.Entry(movie).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task AddWith(Movie movie, int[] characterIds = null, int[] genresIds = null)
         {
             var newMovie = movie;
 
@@ -51,7 +110,7 @@ namespace AlkemyChallenge.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task Update(Movie movie, int[] characterIds = null, int[] genresIds = null)
+        public async Task UpdateWith(Movie movie, int[] characterIds = null, int[] genresIds = null)
         {
             if (characterIds != null)
             {

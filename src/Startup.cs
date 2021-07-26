@@ -34,6 +34,8 @@ namespace AlkemyChallenge
             services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("AlkemyChallenge")));
 
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
             services.AddScoped<MovieRepository>();
             services.AddScoped<CharacterRepository>();
             services.AddScoped<FileService>();

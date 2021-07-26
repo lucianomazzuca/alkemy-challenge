@@ -10,6 +10,8 @@ using AlkemyChallenge.Models;
 using AlkemyChallenge.Repositories;
 using AlkemyChallenge.Services;
 using AlkemyChallenge.Exceptions;
+using AutoMapper;
+using AlkemyChallenge.DTOs.Movie;
 
 namespace AlkemyChallenge.Controllers
 {
@@ -19,18 +21,22 @@ namespace AlkemyChallenge.Controllers
     {
         private readonly MovieRepository _movieRepository;
         private readonly FileService _fileService;
-        public MovieController(MovieRepository movieRepository, FileService fileService,AppDbContext context)
+        private readonly IMapper _mapper;
+
+        public MovieController(MovieRepository movieRepository, FileService fileService, IMapper mapper)
         {
             _movieRepository = movieRepository;
             _fileService = fileService;
+            _mapper = mapper;
         }
 
         // GET: api/Movie
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Movie>>> GetMovies()
+        public async Task<ActionResult<IEnumerable<MovieReadDto>>> GetMovies()
         {
             var movies = await _movieRepository.GetAll();
-            return movies.ToList();
+            var moviesReadDto = _mapper.Map<IEnumerable<MovieReadDto>>(movies);
+            return Ok(moviesReadDto);
         }
 
         //// GET: api/Movie/5
