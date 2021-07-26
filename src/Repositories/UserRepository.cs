@@ -13,5 +13,12 @@ namespace AlkemyChallenge.Repositories
         public UserRepository(AppDbContext context) : base(context)
         {
         }
+
+        public async Task<User> GetByEmail(string email)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+
+            return user;
+        }
     }
 }

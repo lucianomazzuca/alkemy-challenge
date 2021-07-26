@@ -12,7 +12,7 @@ using Xunit;
 
 namespace AlkemyChallenge.Tests.Respositories
 {
-    class UserRepositoryTest
+    public class UserRepositoryTest
     {
         public UserRepositoryTest()
         {
@@ -27,9 +27,9 @@ namespace AlkemyChallenge.Tests.Respositories
 
         private void Seed()
         {
-            var user1 = new User() { Id = 1, Email = "test@mail.com", Password="123456"};
-            var user2 = new User() { Id = 1, Email = "test2@mail.com", Password = "123456" };
-            var user3 = new User() { Id = 1, Email = "test3@mail.com", Password = "123456" };
+            var user1 = new User() { Id = 1, Email = "test@mail.com", Password = "123456" };
+            var user2 = new User() { Id = 2, Email = "test2@mail.com", Password = "123456" };
+            var user3 = new User() { Id = 3, Email = "test3@mail.com", Password = "123456" };
 
 
             using (var context = new AppDbContext(ContextOptions))
@@ -42,6 +42,39 @@ namespace AlkemyChallenge.Tests.Respositories
                 context.Users.Add(user3);
 
                 context.SaveChanges();
+            }
+        }
+
+        [Fact]
+        public async void Add_NewUser()
+        {
+            using (var context = new AppDbContext(ContextOptions))
+            {
+                var repository = new UserRepository(context);
+                var user = new User() { Email = "user@mail.com", Password = "12345" };
+
+                await repository.Add(user);
+                var users = context.Users.ToList();
+
+                Assert.Equal(4, users.Count);
+                Assert.Equal(4, users[3].Id);
+                Assert.Equal("user@mail.com", users[3].Email);
+            }
+        }
+
+        [Fact]
+        public async void GetByEmail_ReturnsUser()
+        {
+            using (var context = new AppDbContext(ContextOptions))
+            {
+                var repository = new UserRepository(context);
+                var user1 = new User() { Email = "user@mail.com", Password = "12345" };
+                await repository.Add(user1);
+
+                var user = await repository.GetByEmail("user@mail.com");
+
+                Assert.Equal(4, user.Id);
+                Assert.Equal("user@mail.com", user.Email);
             }
         }
     }
