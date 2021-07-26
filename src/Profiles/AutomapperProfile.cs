@@ -1,4 +1,5 @@
-﻿using AlkemyChallenge.DTOs.Movie;
+﻿using AlkemyChallenge.DTOs.Character;
+using AlkemyChallenge.DTOs.Movie;
 using AlkemyChallenge.Models;
 using AutoMapper;
 using System;
@@ -13,6 +14,7 @@ namespace AlkemyChallenge.Profiles
         public AutomapperProfile()
         {
             CreateMap<Movie, MovieReadDto>();
+            CreateMap<Character, CharacterReadDto>();
         }
     }
 }

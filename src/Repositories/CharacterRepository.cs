@@ -14,6 +14,41 @@ namespace AlkemyChallenge.Repositories
         {
         }
 
+        public IEnumerable<Character> GetAllWith(string name, int? age = null, int? movieId = null)
+        {
+            IQueryable<Character> characters = _context.Characters;
+
+            if (name != null)
+            {
+                characters = characters.Where(c => c.Name.Contains(name));
+            }
+
+            if (age != null)
+            {
+                characters = characters.Where(c => c.Age == age);
+            }
+
+            if (movieId != null)
+            {
+                characters = characters.Where(c => c.Movies.Any(m => m.Id == movieId));
+
+                // Projection 
+                //characters = characters.Include(characters => characters.Movies)
+                //    .Select(c => new Character
+                //    {
+                //        Id = c.Id,
+                //        Age = c.Age,
+                //        Image = c.Image,
+                //        Name = c.Name,
+                //        Story = c.Story,
+                //        Weight = c.Weight,
+                //        Movies = (ICollection<Movie>)c.Movies.Where(m => m.Id == movieId)
+                //    });
+            }
+
+            return characters;
+        }
+
         public override async Task<Character> GetById(int id)
         {
             var character = await _context.Characters

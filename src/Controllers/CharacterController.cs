@@ -10,6 +10,8 @@ using AlkemyChallenge.Models;
 using AlkemyChallenge.Repositories;
 using AlkemyChallenge.Services;
 using AlkemyChallenge.Exceptions;
+using AutoMapper;
+using AlkemyChallenge.DTOs.Character;
 
 namespace AlkemyChallenge.Controllers
 {
@@ -19,19 +21,22 @@ namespace AlkemyChallenge.Controllers
     {
         private readonly CharacterRepository _characterRepository;
         private readonly FileService _fileService;
+        private readonly IMapper _mapper;
 
-        public CharacterController(CharacterRepository characterRepository, FileService fileService)
+        public CharacterController(CharacterRepository characterRepository, FileService fileService, IMapper mapper)
         {
             _characterRepository = characterRepository;
             _fileService = fileService;
+            _mapper = mapper;
         }
 
         // GET: api/Character
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Character>>> GetCharacters()
+        public ActionResult<IEnumerable<CharacterReadDto>> GetCharacters([FromQuery] string name, [FromQuery] int? age = null, [FromQuery] int? movieId = null)
         {
-            var characters = await _characterRepository.GetAll();
-            return characters.ToList();
+            var characters = _characterRepository.GetAllWith(name, age, movieId);
+            var charactersDto = _mapper.Map<IEnumerable<CharacterReadDto>>(characters);
+            return Ok(charactersDto);
         }
 
         // GET: api/Character/5

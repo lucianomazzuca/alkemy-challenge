@@ -276,5 +276,21 @@ namespace AlkemyChallenge.Tests.Respositories
                 await Assert.ThrowsAsync<RecordNotFoundException>(() => repository.Delete(4));
             }
         }
+
+        [Fact]
+        public void GetAllWith_Title()
+        {
+            using (var context = new AppDbContext(ContextOptions))
+            {
+                var repository = new MovieRepository(context);
+
+                var data = repository.GetAllWith("Memento", null, null);
+                var movies = data.ToList();
+
+                Assert.Single(movies);
+                Assert.Equal(2, movies[0].Id);
+                Assert.Equal("Memento", movies[0].Title);
+            }
+        }
     }
 }

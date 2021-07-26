@@ -35,6 +35,7 @@ namespace AlkemyChallenge.Tests.Respositories
             var character2 = new Character() { Id = 2, Name = "Test", Age = 32, Image = "image.jpg", Story = "lorem ipsum", Weight = 80 };
             var character3 = new Character() { Id = 3, Name = "Batman", Age = 32, Image = "image.jpg", Story = "lorem ipsum", Weight = 80 };
 
+            movie1.Characters.Add(character2);
 
             using (var context = new AppDbContext(ContextOptions))
             {
@@ -137,6 +138,39 @@ namespace AlkemyChallenge.Tests.Respositories
                 var repository = new CharacterRepository(context);
 
                 await Assert.ThrowsAsync<RecordNotFoundException>(() => repository.Delete(4));
+            }
+        }
+
+        [Fact]
+        public void GetAllWith_Name()
+        {
+            using (var context = new AppDbContext(ContextOptions))
+            {
+                var repository = new CharacterRepository(context);
+
+                var data = repository.GetAllWith("Batman", null, null);
+                var characters = data.ToList();
+
+                Assert.Single(characters);
+                Assert.Equal(3, characters[0].Id);
+                Assert.Equal("Batman", characters[0].Name);
+            }
+        }
+
+        [Fact]
+        public void GetAllWith_MovieId()
+        {
+            using (var context = new AppDbContext(ContextOptions))
+            {
+                var repository = new CharacterRepository(context);
+
+                // Find characters related to movie with id 1
+                var data = repository.GetAllWith(null, null, 1);
+                var characters = data.ToList();
+
+                Assert.Single(characters);
+                Assert.Equal(2, characters[0].Id);
+                Assert.Equal("Test", characters[0].Name);
             }
         }
     }

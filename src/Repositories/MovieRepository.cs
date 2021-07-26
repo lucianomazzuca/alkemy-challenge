@@ -14,6 +14,34 @@ namespace AlkemyChallenge.Repositories
         {
         }
 
+        public IEnumerable<Movie> GetAllWith(string title, string order, int? genreId = null)
+        {
+            IQueryable<Movie> movies = _context.Movies;
+            
+            if (title != null)
+            {
+                movies = movies.Where(m => m.Title.Contains(title));
+            }
+
+            if (order == "ASC")
+            {
+                movies = movies.OrderBy(m => m.CreatedAt);
+            }
+
+            if (order == "DESC")
+            {
+                movies = movies.OrderByDescending(m => m.CreatedAt);
+            }
+
+            //if (genreId > 0)
+            //{
+            //    movies = movies.Include(movies => movies.Genres)
+            //        .Where(movies => movies.Genres.Where(genre => genre.Id == genreId));
+            //}
+
+            return movies;
+        }
+
         public override async Task<Movie> GetById(int id)
         {
             var movie = await _context.Movies
@@ -23,6 +51,7 @@ namespace AlkemyChallenge.Repositories
 
             return movie;
         }
+
 
         public override async Task Add(Movie movie)
         {

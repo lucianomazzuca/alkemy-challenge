@@ -32,9 +32,9 @@ namespace AlkemyChallenge.Controllers
 
         // GET: api/Movie
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<MovieReadDto>>> GetMovies()
+        public ActionResult<IEnumerable<MovieReadDto>> GetMovies([FromQuery] string title, [FromQuery] int genre, [FromQuery] string order)
         {
-            var movies = await _movieRepository.GetAll();
+            var movies = _movieRepository.GetAllWith(title, order, genre);
             var moviesReadDto = _mapper.Map<IEnumerable<MovieReadDto>>(movies);
             return Ok(moviesReadDto);
         }
