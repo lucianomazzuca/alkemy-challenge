@@ -32,7 +32,7 @@ namespace AlkemyChallenge.Controllers
 
         // GET: api/Movie
         [HttpGet]
-        public ActionResult<IEnumerable<MovieReadDto>> GetMovies([FromQuery] string title, [FromQuery] int genre, [FromQuery] string order)
+        public ActionResult<IEnumerable<MovieReadDto>> GetMovies([FromQuery] string title, [FromQuery] string order, [FromQuery] int? genre = null)
         {
             var movies = _movieRepository.GetAllWith(title, order, genre);
             var moviesReadDto = _mapper.Map<IEnumerable<MovieReadDto>>(movies);

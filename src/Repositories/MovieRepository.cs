@@ -33,11 +33,10 @@ namespace AlkemyChallenge.Repositories
                 movies = movies.OrderByDescending(m => m.CreatedAt);
             }
 
-            //if (genreId > 0)
-            //{
-            //    movies = movies.Include(movies => movies.Genres)
-            //        .Where(movies => movies.Genres.Where(genre => genre.Id == genreId));
-            //}
+            if (genreId != 0)
+            {
+                movies = movies.Where(m => m.Genres.Any(g => g.Id == genreId));
+            }
 
             return movies;
         }

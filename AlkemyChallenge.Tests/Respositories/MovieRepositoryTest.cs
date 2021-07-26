@@ -37,6 +37,8 @@ namespace AlkemyChallenge.Tests.Respositories
 
             var genre1 = new Genre() { Id = 1, Image = "image.jpg", Name = "Action" };
 
+            movie2.Genres.Add(genre1);
+
             using (var context = new AppDbContext(ContextOptions))
             {
                 context.Database.EnsureDeleted();
@@ -285,6 +287,22 @@ namespace AlkemyChallenge.Tests.Respositories
                 var repository = new MovieRepository(context);
 
                 var data = repository.GetAllWith("Memento", null, null);
+                var movies = data.ToList();
+
+                Assert.Single(movies);
+                Assert.Equal(2, movies[0].Id);
+                Assert.Equal("Memento", movies[0].Title);
+            }
+        }
+
+        [Fact]
+        public void GetAllWith_Genre()
+        {
+            using (var context = new AppDbContext(ContextOptions))
+            {
+                var repository = new MovieRepository(context);
+
+                var data = repository.GetAllWith(null, null, 1);
                 var movies = data.ToList();
 
                 Assert.Single(movies);
