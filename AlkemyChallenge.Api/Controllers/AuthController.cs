@@ -45,7 +45,7 @@ namespace AlkemyChallenge.Controllers
 
             await _userRepository.Add(userDto);
 
-            //await _emailService.SendEmail(userDto.Email);
+            await _emailService.SendEmail(userDto.Email);
 
             return StatusCode(201);
         }

@@ -1,0 +1,503 @@
+{
+	"info": {
+		"_postman_id": "0058092a-e60c-4ff5-983e-77ae74d4892c",
+		"name": "alkemy-challenge",
+		"description": "Primero se debe crear un usuario y logearse para obtener un jwt con el que acceder al resto de rutas",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Registrar  usuario",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"user@mail.com\",\r\n    \"password\": \"12345\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/register",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var {token} = pm.response.json();\r",
+									"pm.collectionVariables.set(\"token\", token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"user@mail.com\",\r\n    \"password\": \"12345\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						},
+						"description": "Enviar credenciales válidas devolverá un JWT."
+					},
+					"response": []
+				}
+			],
+			"description": "Auth",
+			"auth": {
+				"type": "noauth"
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Characters",
+			"item": [
+				{
+					"name": "Crear personaje",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "Jack Sparrow",
+									"type": "text"
+								},
+								{
+									"key": "age",
+									"value": "35",
+									"type": "text"
+								},
+								{
+									"key": "weight",
+									"value": "80",
+									"type": "text"
+								},
+								{
+									"key": "story",
+									"value": "Legendary pirate of the Seven Seas, and the irreverent trickster of the Caribbean.",
+									"type": "text"
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/C:/Users/mazzu/Downloads/1017448_10152149135045808_1549108216670677260_n.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/characters",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"characters"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener todos los personajes",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/characters",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"characters"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "Jack Sparrow",
+									"disabled": true
+								},
+								{
+									"key": "age",
+									"value": "30",
+									"disabled": true
+								},
+								{
+									"key": "weight",
+									"value": "80",
+									"disabled": true
+								},
+								{
+									"key": "movies",
+									"value": "1",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Habilitar los queries para filtrar los personajes."
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener personaje por id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/characters/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"characters",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Editar personaje",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "Test",
+									"type": "text"
+								},
+								{
+									"key": "age",
+									"value": "35",
+									"type": "text"
+								},
+								{
+									"key": "weight",
+									"value": "80",
+									"type": "text"
+								},
+								{
+									"key": "story",
+									"value": "Legendary pirate of the Seven Seas, and the irreverent trickster of the Caribbean.",
+									"type": "text"
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": []
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/characters/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"characters",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar personaje",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/characters/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"characters",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Movies",
+			"item": [
+				{
+					"name": "Crear pelicula",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "title",
+									"value": "Pirates of the Caribbean",
+									"type": "text"
+								},
+								{
+									"key": "rating",
+									"value": "5",
+									"type": "text"
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/C:/Users/mazzu/Downloads/Screenshot 2021-07-17 222410.png"
+								},
+								{
+									"key": "characters",
+									"value": "[1, 2]",
+									"description": "IDs en formato JSON",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "genres",
+									"value": "[1, 2]",
+									"description": "IDs en formato JSON",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/movies",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"movies"
+							]
+						},
+						"description": "Habilitar los campos \"characters\" y \"genres\" para crear una pelicula con estas asociaciones."
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener todas las peliculas",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/movies",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"movies"
+							],
+							"query": [
+								{
+									"key": "title",
+									"value": "Batman",
+									"disabled": true
+								},
+								{
+									"key": "genre",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "order",
+									"value": "DESC",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Habilitar los queries para filtrar las peliculas."
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener peliculas por id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/movies/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"movies",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Editar pelicula",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "title",
+									"value": "BAtman",
+									"type": "text"
+								},
+								{
+									"key": "rating",
+									"value": "4",
+									"type": "text"
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": [],
+									"disabled": true
+								},
+								{
+									"key": "characters",
+									"value": "[1, 2]",
+									"description": "IDs de personajes",
+									"type": "text"
+								},
+								{
+									"key": "genres",
+									"value": "[1, 2]",
+									"description": "IDs ",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/movies/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"movies",
+								"1"
+							]
+						},
+						"description": "Habilitar los campos \"characters\" y \"genres\" para editar una pelicula con estas asociaciones."
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar pelicula",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/movies/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"movies",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "https://localhost:5001/api"
+		},
+		{
+			"key": "token",
+			"value": ""
+		}
+	]
+}
