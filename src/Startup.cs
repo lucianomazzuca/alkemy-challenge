@@ -38,6 +38,7 @@ namespace AlkemyChallenge
 
             services.AddScoped<MovieRepository>();
             services.AddScoped<CharacterRepository>();
+            services.AddScoped<UserRepository>();
             services.AddScoped<FileService>();
 
             services.AddControllers();
