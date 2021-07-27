@@ -68,9 +68,24 @@ namespace AlkemyChallenge.Controllers
             {
                 movie.Image = await _fileService.SaveImage(image);
             }
-            await _movieRepository.Add(movie);
 
-            return CreatedAtAction("GetMovie", new { id = movie.Id }, movie);
+            var form = HttpContext.Request.Form;
+            int[] charactersIds = null;
+            int[] genresIds = null;
+
+            if (!StringValues.IsNullOrEmpty(form["characters"]))
+            {
+                charactersIds = JsonSerializer.Deserialize<int[]>(form["characters"]);
+            }
+
+            if (!StringValues.IsNullOrEmpty(form["genres"]))
+            {
+                genresIds = JsonSerializer.Deserialize<int[]>(form["genres"]);
+            }
+
+            await _movieRepository.AddWith(movie, charactersIds, genresIds);
+
+            return StatusCode(201);
         }
 
         //// PUT: api/Movie/5
