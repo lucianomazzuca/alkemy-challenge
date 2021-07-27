@@ -131,7 +131,7 @@ namespace AlkemyChallenge.Tests.Respositories
 
                 Assert.Equal(4, movies.Count);
                 Assert.Equal(4, movies[3].Id);
-                Assert.Equal(2, movies[3].Genres.Count);
+                Assert.Equal(1, movies[3].Genres.Count);
             }
         }
 

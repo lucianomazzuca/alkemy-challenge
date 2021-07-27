@@ -13,6 +13,8 @@ using AlkemyChallenge.Exceptions;
 using AutoMapper;
 using AlkemyChallenge.DTOs.Movie;
 using Microsoft.AspNetCore.Authorization;
+using System.Text.Json;
+using Microsoft.Extensions.Primitives;
 
 namespace AlkemyChallenge.Controllers
 {
@@ -52,7 +54,8 @@ namespace AlkemyChallenge.Controllers
                 return NotFound();
             }
 
-            return movie;
+            var movieDto = _mapper.Map<MovieDetailDto>(movie);
+            return Ok(movieDto);
         }
 
         //// POST: api/Movie
@@ -80,7 +83,22 @@ namespace AlkemyChallenge.Controllers
             }
 
             movie.Id = id;
-            await _movieRepository.Update(movie);
+
+            var form = HttpContext.Request.Form;
+            int[] charactersIds = null;
+            int[] genresIds = null;
+
+            if (!StringValues.IsNullOrEmpty(form["characters"]))
+            {
+                charactersIds = JsonSerializer.Deserialize<int[]>(form["characters"]);
+            }
+
+            if (!StringValues.IsNullOrEmpty(form["genres"]))
+            {
+                genresIds = JsonSerializer.Deserialize<int[]>(form["genres"]);
+            }
+
+            await _movieRepository.UpdateWith(movie, charactersIds, genresIds);
             return NoContent();
         }
 

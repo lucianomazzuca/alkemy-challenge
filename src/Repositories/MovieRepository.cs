@@ -33,7 +33,7 @@ namespace AlkemyChallenge.Repositories
                 movies = movies.OrderByDescending(m => m.CreatedAt);
             }
 
-            if (genreId != 0)
+            if (genreId != null)
             {
                 movies = movies.Where(m => m.Genres.Any(g => g.Id == genreId));
             }
@@ -114,6 +114,7 @@ namespace AlkemyChallenge.Repositories
         public async Task AddWith(Movie movie, int[] characterIds = null, int[] genresIds = null)
         {
             var newMovie = movie;
+            newMovie.CreatedAt = DateTimeOffset.UtcNow;
 
             if (characterIds != null)
             {
@@ -140,13 +141,23 @@ namespace AlkemyChallenge.Repositories
 
         public async Task UpdateWith(Movie movie, int[] characterIds = null, int[] genresIds = null)
         {
+            var movieToUpdate = await _context.Movies
+                .Include(movie => movie.Characters)
+                .Include(movie => movie.Genres)
+                .FirstOrDefaultAsync(m => m.Id == movie.Id);
+
+            _context.Entry(movieToUpdate).CurrentValues.SetValues(movie);
+
+            // Clear related data
+            movieToUpdate.Characters.Clear();
+            movieToUpdate.Genres.Clear();
+
             if (characterIds != null)
             {
                 foreach (int characterId in characterIds)
                 {
-                    movie.Characters.Clear();
                     Character character = await _context.Characters.FindAsync(characterId);
-                    movie.Characters.Add(character);
+                    movieToUpdate.Characters.Add(character);
                 }
             }
 
@@ -154,14 +165,13 @@ namespace AlkemyChallenge.Repositories
             {
                 foreach (int genreId in genresIds)
                 {
-                    movie.Genres.Clear();
                     Genre genre = await _context.Genres.FindAsync(genreId);
-                    movie.Genres.Add(genre);
+                    movieToUpdate.Genres.Add(genre);
                 }
             }
 
-            _context.Entry(movie).State = EntityState.Modified;
-            //_context.Movies.Update(movie);
+            //_context.Entry(movie).State = EntityState.Modified;
+            //_context.Movies.Update(movieToUpdate);
             await _context.SaveChangesAsync();
         }
 

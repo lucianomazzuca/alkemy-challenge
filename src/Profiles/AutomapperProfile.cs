@@ -15,6 +15,7 @@ namespace AlkemyChallenge.Profiles
         public AutomapperProfile()
         {
             CreateMap<Movie, MovieReadDto>();
+            CreateMap<Movie, MovieDetailDto>();
             CreateMap<Character, CharacterReadDto>();
             CreateMap<UserCreateDto, User>();
         }
