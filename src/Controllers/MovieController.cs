@@ -12,9 +12,11 @@ using AlkemyChallenge.Services;
 using AlkemyChallenge.Exceptions;
 using AutoMapper;
 using AlkemyChallenge.DTOs.Movie;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AlkemyChallenge.Controllers
 {
+    [Authorize]
     [Route("api/movies")]
     [ApiController]
     public class MovieController : ControllerBase

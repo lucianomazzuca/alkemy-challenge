@@ -12,9 +12,11 @@ using AlkemyChallenge.Services;
 using AlkemyChallenge.Exceptions;
 using AutoMapper;
 using AlkemyChallenge.DTOs.Character;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AlkemyChallenge.Controllers
 {
+    [Authorize]
     [Route("api/characters")]
     [ApiController]
     public class CharacterController : ControllerBase

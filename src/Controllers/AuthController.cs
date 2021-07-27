@@ -8,6 +8,8 @@ using System.Collections.Generic;
 using System.Linq;
 using AlkemyChallenge.Models;
 using AlkemyChallenge.DTOs.User;
+using Microsoft.Extensions.Configuration;
+using AlkemyChallenge.Services;
 
 namespace AlkemyChallenge.Controllers
 {
@@ -17,11 +19,13 @@ namespace AlkemyChallenge.Controllers
     {
         private readonly UserRepository _userRepository;
         private readonly IMapper _mapper;
+        private readonly TokenService _tokenService;
 
-        public AuthController(UserRepository userRepository, IMapper mapper)
+        public AuthController(UserRepository userRepository, IMapper mapper, TokenService tokenService)
         {
             _userRepository = userRepository;
             _mapper = mapper;
+            _tokenService = tokenService;
         }
 
         // POST: api/Character
@@ -40,6 +44,20 @@ namespace AlkemyChallenge.Controllers
             await _userRepository.Add(userDto);
 
             return StatusCode(201);
+        }
+
+        [HttpPost("login")]
+        public async Task<ActionResult> Login(User user)
+        {
+            var userFromDb = await _userRepository.GetByEmail(user.Email);
+            if (userFromDb == null)
+            {
+                return BadRequest("Wrong Credentials");
+            }
+
+            var token = _tokenService.GenerateToken(user);
+
+            return Ok(new { token });
         }
     }
 }
