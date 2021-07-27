@@ -20,12 +20,14 @@ namespace AlkemyChallenge.Controllers
         private readonly UserRepository _userRepository;
         private readonly IMapper _mapper;
         private readonly TokenService _tokenService;
+        private readonly EmailService _emailService;
 
-        public AuthController(UserRepository userRepository, IMapper mapper, TokenService tokenService)
+        public AuthController(UserRepository userRepository, IMapper mapper, TokenService tokenService, EmailService emailService)
         {
             _userRepository = userRepository;
             _mapper = mapper;
             _tokenService = tokenService;
+            _emailService = emailService;
         }
 
         // POST: api/Character
@@ -42,6 +44,8 @@ namespace AlkemyChallenge.Controllers
             userDto.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
 
             await _userRepository.Add(userDto);
+
+            await _emailService.SendEmail(userDto.Email);
 
             return StatusCode(201);
         }

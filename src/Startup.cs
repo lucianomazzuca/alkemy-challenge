@@ -45,6 +45,7 @@ namespace AlkemyChallenge
 
             services.AddScoped<FileService>();
             services.AddScoped<TokenService>();
+            services.AddScoped<EmailService>();
 
             var key = Encoding.ASCII.GetBytes(Configuration.GetSection("AppSettings:Jwt").Value);
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options => {
